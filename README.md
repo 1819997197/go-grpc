@@ -2,4 +2,4 @@
 
 #### ch01: grpc安装
 
-#### ch01: hello grpc
+#### ch02: hello grpc
