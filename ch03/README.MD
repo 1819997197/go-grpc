@@ -23,7 +23,7 @@
 ```
 
 eg:
-![Image text](https://github.com/1819997197/go-grpc/master/ch03/jia_mi.png)
+![Image text](https://github.com/1819997197/go-grpc/blob/master/ch03/jia_mi.png)
 
 ## 生成证书
 #### 1.生成私钥
