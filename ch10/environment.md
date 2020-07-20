@@ -1,7 +1,7 @@
 # APM development environmentedit
 
 ## 整体架构
-![Image text](https://github.com/1819997197/micro/blob/master/ch07/ch07.png)
+![整体架构](https://github.com/1819997197/go-grpc/blob/master/ch10/apm.png)
 
 ## install-and-run
 安装并运行总的有三种方式：
