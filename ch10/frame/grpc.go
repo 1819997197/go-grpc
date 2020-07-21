@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
+	"go.elastic.co/apm/module/apmgrpc"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"net"
@@ -30,7 +31,7 @@ type GRPCApplication struct {
 }
 
 func initApplication(app *GRPCApplication) {
-	app.GRPCServer = grpc.NewServer()
+	app.GRPCServer = grpc.NewServer(grpc.UnaryInterceptor(apmgrpc.NewUnaryServerInterceptor()))
 	app.GatewayServeMux = runtime.NewServeMux()
 
 	mux := http.NewServeMux()

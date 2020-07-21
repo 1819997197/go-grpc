@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	pb "go-grpc/ch10/proto"
+	"go.elastic.co/apm/module/apmgrpc"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -13,7 +14,7 @@ const (
 )
 
 func main() {
-	conn, err := grpc.Dial(Address, grpc.WithInsecure())
+	conn, err := grpc.Dial(Address, grpc.WithInsecure(), grpc.WithUnaryInterceptor(apmgrpc.NewUnaryClientInterceptor()))
 	if err != nil {
 		fmt.Println("grpc.Dial err: ", err)
 		return
