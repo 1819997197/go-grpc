@@ -18,9 +18,9 @@
 
 #### ch09: gRPC 框架(http/grpc + config)
 
-#### ch10: gRPC 框架(http/grpc + config + 调用链)
+#### ch10: gRPC 框架(http/grpc + config + 调用链 + gorm)
 
-#### ch11: gRPC 框架 完整示例(bff + ws-order + apm)
+#### ch11: gRPC 框架 完整示例(bff + ws-order + apm + gorm)
 
 #### ch12: gRPC 框架(k8s + 服务)
 
