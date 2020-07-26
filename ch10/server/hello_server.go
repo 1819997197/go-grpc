@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/spf13/viper"
 	pb "go-grpc/ch10/proto"
+	"go-grpc/ch10/repository"
 )
 
 type helloHTTPService struct{}
@@ -15,13 +15,19 @@ func (h *helloHTTPService) SayHello(ctx context.Context, in *pb.HelloHTTPRequest
 	resp := new(pb.HelloHTTPResponse)
 	resp.Message = "Hello " + in.Name + "."
 
-	username := viper.GetString("database.username")
-	password := viper.GetString("database.password")
-	host := viper.GetString("database.host")
-	port := viper.GetInt("database.port")
-	dbname := viper.GetString("database.dbname")
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", username, password, host, port, dbname)
-	fmt.Println(dsn)
+	list, err := repository.NewUserModel().FindList(ctx)
+	if err != nil {
+		fmt.Println("SayHello err: ", err)
+		return resp, nil
+	}
+	if list == nil {
+		fmt.Println("list is nil")
+		return resp, nil
+	}
+
+	for _, v := range list {
+		fmt.Println("user: ", v.Id, "---", v.Name)
+	}
 
 	return resp, nil
 }

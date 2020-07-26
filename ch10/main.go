@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-grpc/ch10/frame"
 	"go-grpc/ch10/register"
+	"go-grpc/ch10/vars"
 )
 
 var name = "ws-order"
@@ -16,7 +17,13 @@ func main() {
 		return
 	}
 
-	// 2.run server
+	// 2.init mysql
+	if err := initMysql(); err != nil {
+		fmt.Println("init mysql err: ", err)
+		return
+	}
+
+	// 3.run server
 	application := &frame.GRPCApplication{
 		App:                &frame.Application{Name: name},
 		Port:               port,
@@ -28,4 +35,10 @@ func main() {
 		fmt.Println("run err: ", err)
 		return
 	}
+}
+
+func initMysql() error {
+	var err error
+	vars.DB, err = frame.Instance()
+	return err
 }

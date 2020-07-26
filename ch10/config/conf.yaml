@@ -1,7 +1,11 @@
 database:
   driver: mysql
-  host: 127.0.0.1
+  host: 192.168.1.102
   port: 3306
-  username: go-grpc
-  dbname: go-grpc
-  password: 123456
+  username: root
+  dbname: test
+  password: root
+  debug: true
+  maxIdle: 10 #(可选)连接池最大闲置的连接数
+  maxOpen: 20 #(可选)连接池最大打开的连接数
+  maxLifetime: 60 #(可选，单位秒)连接对象可重复使用的时间长度

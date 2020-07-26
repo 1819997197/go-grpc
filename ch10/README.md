@@ -12,7 +12,27 @@
 ```
 $GOPATH/src/go-grpc/ch10
 
-
+ch10
+├── frame                           // 框架封装
+│   ├── config.go                   // init config
+│   ├── grpc.go                     // grpc/http
+│   └── mysql.go                    // init mysql
+├── register                        // register http/grpc接口
+│   └── register.go
+├── repository                      // 仓储层(封装操作数据库方法)
+│   └── user.go
+├── server                          // 服务实现
+│   └── hello_server.go
+├── vars                            // 全局变量
+│   └── varsiable.go
+├── config                          // 配置文件
+│   └── conf.yaml
+├── proto                           // proto文件
+├── docker-compose.yml              // APM docker-compose文件
+├── environment.md                  // APM安装方法介绍
+├── main.go                         // 服务端入口文件
+├── client.go                       // 客户端
+└── README.md
 ```
 
 #### 安装APM
@@ -34,4 +54,59 @@ export ELASTIC_APM_SERVER_URL=http://192.168.1.106:8200
 export ELASTIC_APM_SERVICE_NAME=ws
 
 5.通过 http://localhost:5601/app/apm 查看调用链数据
+```
+
+#### Usage
+1.创建数据库表，修改配置文件
+```
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+// 配置文件 /config/conf.yaml
+```
+
+2.配置APM环境变量
+```
+export ELASTIC_APM_SERVER_URL=http://192.168.1.106:8200
+export ELASTIC_APM_SERVICE_NAME=ws
+```
+
+3.Generate proto file
+```
+cd $GOPATH/src/go-grpc/ch10/proto
+
+// 编译google.api
+protoc -I . --go_out=plugins=grpc,Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/protoc-gen-go/descriptor:. google/api/*.proto
+
+// 编译hello_http.proto
+protoc -I . --go_out=plugins=grpc,Mgoogle/api/annotations.proto=go-grpc/ch10/proto/google/api:. ./*.proto
+
+// 编译hello_http.proto gateway
+protoc --grpc-gateway_out=logtostderr=true:. ./*.proto
+```
+
+4.Run the service
+```
+cd $GOPATH/src/go-grpc/ch10/
+go mod init go-grpc/ch10
+go build -o srv main.go
+./srv
+```
+
+5.Run the client
+```
+cd $GOPATH/src/go-grpc/ch10
+go run client.go
+
+// curl/postman请求
+curl -X POST -k http://localhost:8080/example/echo -d '{"name": "gRPC-HTTP is working!"}'
+```
+
+6.查看调用链数据
+```
+http://localhost:5601/app/apm
+结果见图 apm1.png, apm2.png
 ```
