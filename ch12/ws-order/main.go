@@ -18,10 +18,10 @@ func main() {
 	}
 
 	// 2.init mysql
-	if err := initMysql(); err != nil {
-		fmt.Println("init mysql err: ", err)
-		return
-	}
+	//if err := initMysql(); err != nil {
+	//	fmt.Println("init mysql err: ", err)
+	//	return
+	//}
 
 	// 3.run server
 	application := &frame.GRPCApplication{

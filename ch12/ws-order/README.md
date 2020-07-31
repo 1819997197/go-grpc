@@ -35,72 +35,27 @@ ch12/ws-order
 └── README.md
 ```
 
-#### 安装APM
-```
-//本示例中采用了environment.md文件中第三种安装方式(部分镜像有所更改)
-1.把docker-compose.yml拷贝到安装了docker、docker-compose的服务器上面
-
-2.docker-compose up
-// ctrl+c will stop all of the containers
-
-3.成功启动之后会显示如下信息
-[root@will apm]# docker-compose up
-Starting apm_elasticsearch_1 ... done
-Starting apm_kibana_1        ... done
-Starting apm_apm-server_1    ... done
-
-4.运行成功之后，根据引导配置项目(http://localhost:5601/app/kibana#/home/tutorial/apm)
-export ELASTIC_APM_SERVER_URL=http://192.168.1.106:8200
-export ELASTIC_APM_SERVICE_NAME=ws
-
-5.通过 http://localhost:5601/app/apm 查看调用链数据
-```
-
 #### Usage
-1.创建数据库表，修改配置文件
+1.Generate the service
 ```
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
-
-// 配置文件 /config/conf.yaml
+// 生成proto并编译出二进制文件
+make build
 ```
 
-2.配置APM环境变量
+2.构建镜像
 ```
-export ELASTIC_APM_SERVER_URL=http://192.168.1.106:8200
-export ELASTIC_APM_SERVICE_NAME=ws-order
-```
+make docker
 
-3.Generate proto file
-```
-cd $GOPATH/src/go-grpc/ch12/ws-order/proto
-
-// 编译google.api
-protoc -I . --go_out=plugins=grpc,Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/protoc-gen-go/descriptor:. google/api/*.proto
-
-// 编译hello_http.proto
-protoc -I . --go_out=plugins=grpc,Mgoogle/api/annotations.proto=go-grpc/ch12/ws-order/proto/google/api:. ./*.proto
-
-// 编译hello_http.proto gateway
-protoc --grpc-gateway_out=logtostderr=true:. ./*.proto
+// 测试镜像是否可用
+[root@will ws-order]# docker run --name ws2 -d -p 8080:8080 service_order:0.1
+1e94eec4089c18bb847c52ab0a7a2c9f21da7015f0d410396fd9232a64e97a23
+[root@will ws-order]# docker logs 1e94
+listen  :8080
+[root@will ws-order]# curl -X POST -k http://localhost:8080/example/echo -d '{"name": "gRPC-HTTP is working!"}'
+{"message":"Hello gRPC-HTTP is working!."}
 ```
 
-4.Run the service
-```
-cd $GOPATH/src/go-grpc/ch12/ws-order/
-go mod init go-grpc/ch12/ws-order
-go build -o srv main.go
-./srv
+3.在k8s中把服务跑起来
 ```
 
-5.Test the ws-order
-```
-cd $GOPATH/src/go-grpc/ch12/ws-order
-go run client.go
-
-// curl/postman请求
-curl -X POST -k http://localhost:8080/example/echo -d '{"name": "gRPC-HTTP is working!"}'
 ```

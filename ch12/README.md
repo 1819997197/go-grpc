@@ -29,9 +29,3 @@ ch12/
 ```
 curl http://localhost:9100/
 ```
-
-4.查看调用链数据
-```
-http://localhost:5601/app/apm
-结果见图 apm1.png, apm2.png
-```

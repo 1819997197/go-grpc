@@ -21,36 +21,23 @@ ch12/ws-bff
 ```
 
 #### Usage
-1.配置APM环境变量
+#### Usage
+1.Generate the service
 ```
-export ELASTIC_APM_SERVER_URL=http://192.168.1.106:8200
-export ELASTIC_APM_SERVICE_NAME=ws-bff
-```
-
-3.Generate proto file
-```
-cd $GOPATH/src/go-grpc/ch12/ws-order/proto
-
-// 编译google.api
-protoc -I . --go_out=plugins=grpc,Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/protoc-gen-go/descriptor:. google/api/*.proto
-
-// 编译hello_http.proto
-protoc -I . --go_out=plugins=grpc,Mgoogle/api/annotations.proto=go-grpc/ch12/ws-bff/proto/google/api:. ./*.proto
-
-// 编译hello_http.proto gateway
-protoc --grpc-gateway_out=logtostderr=true:. ./*.proto
+// 生成proto并编译出二进制文件
+make build
 ```
 
-4.Run the service
+2.构建镜像
 ```
-cd $GOPATH/src/go-grpc/ch12/ws-bff/
-go mod init go-grpc/ch12/ws-bff
-go build -o srv main.go
-./srv
+make docker
+
+// 测试镜像是否可用
+[root@will ws-order]# docker run --name ws_bff1 -d -p 9100:9100 service_bff:0.1
+4691cbef1824c20c7863df0995fffbae24ba677225cafa2873cc423ea77e71f4
+[root@will ws-order]# curl localhost:9100
+it ok!Hello gRPC.
 ```
 
-5.Test the ws-order
-```
-// curl/postman请求
-curl http://localhost:9100/
+3.在k8s中把服务跑起来
 ```
