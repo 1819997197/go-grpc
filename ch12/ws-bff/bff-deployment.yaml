@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff-deployment
+spec:
+  selector:
+    matchLabels:
+      app: bff-deployment
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: bff-deployment
+    spec:
+      containers:
+      - name: bff-deployment
+        image: service_bff:0.1
+        ports:
+        - containerPort: 9100
+

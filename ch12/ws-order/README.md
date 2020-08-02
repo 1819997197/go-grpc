@@ -57,5 +57,5 @@ listen  :8080
 
 3.在k8s中把服务跑起来
 ```
-
+kubectl apply -f order-deployment.yaml -f order-svc.yaml
 ```

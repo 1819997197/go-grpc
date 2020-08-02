@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	Ws_Order_Address = "0.0.0.0:8080"
+	Ws_Order_Address = "order-svc:8080"
 )
 
 func GetWsOrderClient(ctx context.Context) (*grpc.ClientConn, error) {

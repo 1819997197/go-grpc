@@ -41,3 +41,5 @@ it ok!Hello gRPC.
 
 3.在k8s中把服务跑起来
 ```
+kubectl apply -f bff-deployment.yaml -f bff-svc.yaml
+```
