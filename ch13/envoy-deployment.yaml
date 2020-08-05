@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy-shell-deployment
+spec:
+  selector:
+    matchLabels:
+      app: envoy-shell-deployment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: envoy-shell-deployment
+    spec:
+      containers:
+      - name: envoy-shell-deployment
+        image: envoy-shell:0.4
+        ports:
+        - containerPort: 10000
+        env:
+        - name: "envoy_proxy_port"
+          value: "10000"
+        - name: "envoy_branch"
+          value: "f1,master"
+        - name: "envoy_service_name"
+          value: "order-bff"
+        - name: "envoy_service_port"
+          value: "8080"
+        - name: "envoy_protocol"
+          value: "http"
+
